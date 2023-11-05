@@ -33,6 +33,7 @@ const getAllTrips = async (request, response) => {
       INNER JOIN trips_destinations ON trips_destinations.trip_id = trips.id
       WHERE trips_destinations.destination_id = $1
     `;
+
     const destination_id = parseInt(request.params.destination_id);
     const results = await pool.query(query, [destination_id]);
     response.status(200).json(results.rows);
@@ -49,6 +50,7 @@ const getAllDestinations = async (request, response) => {
       INNER JOIN trips_destinations ON trips_destinations.destination_id = destinations.id
       WHERE trips_destinations.trip_id = $1
     `;
+
     const trip_id = parseInt(request.params.trip_id);
     const results = await pool.query(query, [trip_id]);
     response.status(200).json(results.rows);

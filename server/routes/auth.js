@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
-    res.status(200).json({ succes: true, user: req.user });
+    res.status(200).json({ success: true, user: req.user });
   }
 });
 
@@ -16,7 +16,7 @@ router.get("/login/failed", (req, res) => {
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
-      return next(err);
+      return next(error);
     }
 
     req.session.destroy((err) => {

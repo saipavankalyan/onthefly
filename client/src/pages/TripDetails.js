@@ -4,7 +4,7 @@ import ActivityBtn from "../components/ActivityBtn";
 import DestinationBtn from "../components/DestinationBtn";
 import "./TripDetails.css";
 
-const TripDetails = ({ data }) => {
+const TripDetails = ({ data, api_url }) => {
   const { id } = useParams();
   const [post, setPost] = useState({
     id: 0,
@@ -18,6 +18,7 @@ const TripDetails = ({ data }) => {
   });
   const [activities, setActivities] = useState([]);
   const [destinations, setDestinations] = useState([]);
+  const [travelers, setTravelers] = useState([]);
 
   useEffect(() => {
     const result = data.filter((item) => item.id === parseInt(id))[0];
@@ -33,22 +34,29 @@ const TripDetails = ({ data }) => {
     });
 
     const fetchActivities = async () => {
-      const response = await fetch("/api/activities/" + id);
+      const response = await fetch(`${api_url}/api/activities/` + id);
       const data = await response.json();
       setActivities(data);
     };
 
     const fetchDestinations = async () => {
       const response = await fetch(
-        "/api/trips-destinations/destinations/" + id
+        `${api_url}/api/trips-destinations/destinations/` + id
       );
       const data = await response.json();
       setDestinations(data);
     };
 
+    const fetchTravelers = async () => {
+      const response = await fetch(`${api_url}/api/users-trips/users/${id}`);
+      const data = await response.json();
+      setTravelers(data);
+    };
+
+    fetchTravelers();
     fetchActivities();
     fetchDestinations();
-  }, [data, id]);
+  }, [data, api_url, id]);
 
   return (
     <div className="out">
@@ -68,10 +76,30 @@ const TripDetails = ({ data }) => {
       </div>
 
       <div className="flex-container">
+        <div className="travelers">
+          {travelers && travelers.length > 0
+            ? travelers.map((traveler, index) => (
+                <p
+                  key={index}
+                  style={{ textAlign: "center", lineHeight: 0, paddingTop: 20 }}
+                >
+                  {traveler.username}
+                </p>
+              ))
+            : ""}
+
+          <br />
+
+          <Link to={"/users/add/" + id}>
+            <button className="addActivityBtn">+ Add Traveler</button>
+          </Link>
+        </div>
+
         <div className="activities">
           {activities && activities.length > 0
             ? activities.map((activity, index) => (
                 <ActivityBtn
+                  key={index}
                   id={activity.id}
                   activity={activity.activity}
                   num_votes={activity.num_votes}
@@ -87,6 +115,7 @@ const TripDetails = ({ data }) => {
           {destinations && destinations.length > 0
             ? destinations.map((destination, index) => (
                 <DestinationBtn
+                  key={index}
                   id={destination.id}
                   destination={destination.destination}
                 />

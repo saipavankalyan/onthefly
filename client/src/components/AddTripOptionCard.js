@@ -19,7 +19,7 @@ const AddTripOptionCard = (props) => {
       }),
     };
 
-    await fetch("/api/trips-destinations", options);
+    await fetch(`${props.api_url}/api/trips-destinations`, options);
     window.location.href = "/";
   };
 

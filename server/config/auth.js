@@ -1,10 +1,10 @@
-import GithubStrategy from "passport-github2";
 import { pool } from "./database.js";
+import GitHubStrategy from "passport-github2";
 
 const options = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  // callbackURL: 'http://localhost:3001/auth/github/callback'
+  //callbackURL: 'http://localhost:3001/auth/github/callback'
 };
 
 const verify = async (accessToken, refreshToken, profile, callback) => {
@@ -24,7 +24,7 @@ const verify = async (accessToken, refreshToken, profile, callback) => {
       "SELECT * FROM users WHERE username = $1",
       [userData.username]
     );
-    const user = results.row[0];
+    const user = results.rows[0];
 
     if (!user) {
       const results = await pool.query(
@@ -33,7 +33,8 @@ const verify = async (accessToken, refreshToken, profile, callback) => {
         RETURNING *`,
         [userData.githubId, userData.username, userData.avatarUrl, accessToken]
       );
-      const newUser = results.row[0];
+
+      const newUser = results.rows[0];
       return callback(null, newUser);
     }
 
@@ -43,4 +44,4 @@ const verify = async (accessToken, refreshToken, profile, callback) => {
   }
 };
 
-export const GitHub = new GithubStrategy(options, verify);
+export const GitHub = new GitHubStrategy(options, verify);

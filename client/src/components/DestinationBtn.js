@@ -1,13 +1,12 @@
-import React from 'react'
-import './DestinationBtn.css'
+import React from "react";
+import "./DestinationBtn.css";
 
-
-const DestinationBtn = (props) =>  {
-
+const DestinationBtn = (props) => {
   return (
-    <button className="DestinationBtn" id={props.id}>{props.destination}</button>
+    <button className="DestinationBtn" id={props.id}>
+      {props.destination}
+    </button>
   );
-
 };
 
 export default DestinationBtn;
